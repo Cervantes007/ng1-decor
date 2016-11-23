@@ -1,0 +1,23 @@
+{
+  "name": "ng1-decor",
+  "version": "0.0.1",
+  "description": "angular 2 decorators to angularjs 1.5",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cervantes007/ng1-decor.git"
+  },
+  "keywords": [
+    "ng1decorators"
+  ],
+  "author": "gsi-alejandro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cervantes007/ng1-decor/issues"
+  },
+  "homepage": "https://github.com/Cervantes007/ng1-decor#readme"
+}
