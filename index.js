@@ -1,5 +1,5 @@
 "use strict";
-var appName = 'app.commons';
+var appName = 'app';
 var module = function (moduleOrName) {
     return typeof moduleOrName === "string"
         ? angular.module(moduleOrName)
