@@ -3,6 +3,7 @@ export declare function Component(options: {
     controllerAs?: string;
     template?: string;
     templateUrl?: string;
+    transclude?:boolean;
     bindings?: any;
     require?: any;
     pipes?: any[];
@@ -11,7 +12,10 @@ export declare function Component(options: {
 export declare function Directive(options: {
     selector: string;
     controllerAs?: string;
+    template?: string;
+    templateUrl?: string;
     bindings?: any;
+    transclude?:boolean;
     require?: any;
     pipes?: any[];
     providers?: any[];
