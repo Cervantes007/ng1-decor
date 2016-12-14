@@ -64,6 +64,14 @@ export function Injectable(options?: {
     }
 }
 
+export function Routes(moduleOrName: string | ng.IModule = `${appName}.components`) {
+    return (Class: any) => {
+        module(moduleOrName).config(['$stateProvider', ($stateProvider)=>{
+            return new Class($stateProvider);
+        }]);
+    }
+}
+
 interface PipeTransformStatic {
     new(...args: any[]): PipeTransform;
 }
@@ -88,7 +96,7 @@ export function Pipe(options: {name: string, providers?: Array<string>}, moduleO
 function toCamelCase(str) {
     // Lower cases the string
     return str.toLowerCase()
-        // Replaces any - or _ characters with a space
+    // Replaces any - or _ characters with a space
         .replace( /[-_]+/g, ' ')
         // Removes any non alphanumeric characters
         .replace( /[^\w\s]/g, '')

@@ -1,6 +1,6 @@
 {
   "name": "ng1-decor",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "angular 2 decorators to angularjs 1.5",
   "main": "index.js",
   "types": "index.d.ts",

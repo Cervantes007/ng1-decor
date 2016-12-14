@@ -52,6 +52,15 @@ function Injectable(options, moduleOrName) {
     };
 }
 exports.Injectable = Injectable;
+function Routes(moduleOrName) {
+    if (moduleOrName === void 0) { moduleOrName = appName + ".components"; }
+    return function (Class) {
+        module(moduleOrName).config(['$stateProvider', function ($stateProvider) {
+            return new Class($stateProvider);
+        }]);
+    };
+}
+exports.Routes = Routes;
 function Pipe(options, moduleOrName) {
     if (moduleOrName === void 0) { moduleOrName = appName + ".pipes"; }
     return function (Pipe) {

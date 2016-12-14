@@ -25,6 +25,7 @@ export declare function Injectable(options?: {
     name?: string;
     providers?: Array<string>;
 }, moduleOrName?: string | ng.IModule): (Class: any) => void;
+export declare function Routes(moduleOrName?: string | ng.IModule): (Class: any) => void;
 export interface PipeTransformStatic {
     new (...args: any[]): PipeTransform;
 }
