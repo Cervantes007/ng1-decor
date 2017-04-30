@@ -1,23 +1,58 @@
 {
   "name": "ng1-decor",
-  "version": "0.0.4",
-  "description": "angular 2 decorators to angularjs 1.5",
+  "version": "0.0.5",
+  "description": "Typescript Decorators to Angular 1.5",
   "main": "index.js",
-  "types": "index.d.ts",
+  "typings": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Cervantes007/ng1-decor.git"
+    "build": "webpack || echo Something went wrong",
+    "start": "webpack --watch --progress || echo Something went wrong",
+    "test": "jest --env jest-environment-node-debug",
+    "coverage": "rimraf coverage && npm test -- --coverage --no-cache",
+    "release": "npm pack"
   },
   "keywords": [
-    "ng1decorators"
+    "ts",
+    "typescript",
+    "decorator",
+    "decorators",
+    "angular"
   ],
-  "author": "gsi-alejandro",
+  "author": "Cervantes",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Cervantes007/ng1-decor/issues"
+  "devDependencies": {
+    "@types/angular": "^1.5.8",
+    "@types/jest": "^18.1.1",
+    "@types/node": "^7.0.5",
+    "angular": "1.5.8",
+    "awesome-typescript-loader": "^3.0.3",
+    "harmony": "0.0.1",
+    "jest": "^18.1.0",
+    "rimraf": "^2.5.4",
+    "ts-jest": "^18.0.3",
+    "tslint": "^4.4.2",
+    "tslint-loader": "^3.3.0",
+    "typescript": "2.1.5",
+    "webpack": "^2.2.1",
+    "webpack-merge": "^2.6.1",
+    "webpack-node-externals": "^1.5.4"
   },
-  "homepage": "https://github.com/Cervantes007/ng1-decor#readme"
+  "peerDependencies": {
+    "angular": ">=1.5.0",
+    "typescript": ">=2.1.0"
+  },
+  "jest": {
+    "transform": {
+      ".(ts)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": ".*\\.spec\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "reflect-metadata": "0.1.10"
+  }
 }

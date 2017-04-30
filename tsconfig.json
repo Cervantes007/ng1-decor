@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "lib": ["es6", "dom", "es2015"],
+    "module": "commonjs",
+    "target": "es5",
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "sourceMap": false,
+    "declaration": true,
+    "outDir": "",
+    "removeComments": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "@types/node",
+      "@types/jest",
+      "@types/angular"
+    ]
+  },
+  "files": [
+    "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

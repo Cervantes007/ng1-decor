@@ -1,0 +1,19 @@
+{
+//	"extends": "tslint:recommended",
+	"rules": {
+		"curly": true,
+		"no-empty": true,
+		"no-duplicate-variable": true,
+		"no-any": false,
+		"semicolon": [
+			true,
+			"always"
+		],
+		"max-line-length": [
+			true,
+			400
+		],
+		"no-use-before-declare": true,
+		"quotemark": [true, "'"]
+	}
+}
