@@ -73,7 +73,6 @@ module.exports =
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
 var angular = __webpack_require__(1);
 __webpack_require__(2);
 var appName = 'app';
@@ -102,7 +101,6 @@ function Component(options, moduleOrName) {
         var selector = toCamelCase(options.selector);
         delete options.selector;
         delete options.pipes;
-        delete options.transclude;
         if (options.providers && options.providers.length > 0) {
             Class.$inject = options.providers;
         }

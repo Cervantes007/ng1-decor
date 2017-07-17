@@ -39,7 +39,6 @@ export function Component(options: {
         const selector = toCamelCase(options.selector);
         delete options.selector;
         delete options.pipes;
-        delete options.transclude;
         if(options.providers && options.providers.length > 0){ Class.$inject = options.providers; }
         delete options.providers;
         const bindings = getMetadata(metadataKeys.bindings, Class);
