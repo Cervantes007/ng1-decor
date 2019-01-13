@@ -1,11 +1,13 @@
-# To Make `angularjs` Fun Again
+## Enjoy again programming with `angularjs`
 Library created to those people who remains using angularjs 1.x for any reason, to use new features of JS and CSS and
 can apply CDD (Component Driven Development - components composition) without pain using angularjs 1.x
 
 ## Features
 
+- Lightweight 1.5kb (min/gzip) - 4.5kb (min)
+- No Dependencies
 - Allow easy build one file component.
-- Built-in decorators `@component`, `@directive`, `@pipe`, `@injectable`, `@input`, `@output`, '@reaction'
+- Built-in decorators `@component`, `@directive`, `@pipe`, `@injectable`, `@input`, `@output`, `@reaction`
 - `html` tagged string function allow you write less and IDE highlight.
 - Encourage use of css-in-js in angularjs developers.
 - All elements has isolate scope built-in and are well tested.
@@ -15,6 +17,7 @@ Give it a try, Thanks.
 ## Installation
 
 `npm install ng1-decor --save`
+
 `yarn add ng1-decor`
 
 ## Usage
@@ -56,7 +59,7 @@ export class FunComponent {
 
 - `ng1-decor.html` function enable shortcut for template interpolation, now `{{vm.name}}` can be write like `@.name`
 
-We encorouge you to use css-in-js for styles, try `emotion` is a great library.
+We encourage you to use css-in-js for styles, try `emotion` is a great library.
 Change style base on `@input`.
 If name input has a valid string then it will be show in `green` else in `red`.
 
