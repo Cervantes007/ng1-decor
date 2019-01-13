@@ -1,12 +1,11 @@
 {
   "name": "ng1-decor",
-  "version": "0.0.6",
+  "version": "0.9.0",
   "description": "Typescript Decorators to Angular 1.5",
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "build": "webpack || echo Something went wrong",
-    "start": "webpack --watch --progress || echo Something went wrong",
+    "build": "tsc",
     "test": "jest --env jest-environment-node-debug",
     "coverage": "rimraf coverage && npm test -- --coverage --no-cache",
     "release": "npm pack"
@@ -31,10 +30,7 @@
     "rimraf": "^2.5.4",
     "ts-jest": "^18.0.3",
     "tslint": "^4.4.2",
-    "tslint-loader": "^3.3.0",
-    "typescript": "2.1.5",
-    "webpack": "^2.2.1",
-    "webpack-merge": "^2.6.1",
+    "typescript": "^3.2.2",
     "webpack-node-externals": "^1.5.4"
   },
   "peerDependencies": {

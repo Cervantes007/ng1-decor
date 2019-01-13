@@ -1,80 +1,7 @@
-module.exports =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
-
-var angular = __webpack_require__(1);
-__webpack_require__(2);
+Object.defineProperty(exports, "__esModule", { value: true });
+var angular = require("angular");
+require("reflect-metadata");
 var appName = 'app';
 var module = function (moduleOrName) {
     return typeof moduleOrName === "string"
@@ -84,6 +11,7 @@ var module = function (moduleOrName) {
 exports.metadataKeys = {
     bindings: 'custom:bindings',
     declaration: 'custom:declaration',
+    reactions: 'custom:reactions',
     name: 'custom:name',
     options: 'custom:options',
 };
@@ -116,27 +44,71 @@ function Component(options, moduleOrName) {
     };
 }
 exports.Component = Component;
-function Directive(options, moduleOrName) {
-    if (moduleOrName === void 0) { moduleOrName = appName + ".components"; }
+exports.component = function (_a) {
+    var selector = _a.selector, render = _a.render, providers = _a.providers, transclude = _a.transclude, restrict = _a.restrict, replace = _a.replace;
     return function (Class) {
-        var selector = toCamelCase(options.selector);
-        delete options.selector;
+        var original = Class;
+        var reactions = getMetadata(exports.metadataKeys.reactions, Class);
+        var f = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (reactions) {
+                if (providers) {
+                    var index = providers.indexOf('$scope');
+                    if (index === -1) {
+                        console.error(Class.name + " must have $scope as provider to use watch decorator");
+                    }
+                    else {
+                        for (var key in reactions) {
+                            if (reactions.hasOwnProperty(key)) {
+                                args[index].$watch(reactions[key], original.prototype[key].bind(this));
+                            }
+                        }
+                    }
+                }
+            }
+            return original.apply(this, args);
+        };
+        f.prototype = original.prototype;
+        var camelCaseSelector = selector ? toCamelCase(selector) : getSelectorFromClassName(Class.name);
+        if (providers && providers.length > 0) {
+            f.$inject = providers;
+        }
         var bindings = getMetadata(exports.metadataKeys.bindings, Class);
-        if (options.bindings) {
-            options['bindToController'] = angular.extend({}, bindings, options.bindings);
-        }
-        delete options.bindings;
-        options.controllerAs = options.controllerAs || 'vm';
-        delete options.pipes;
-        if (options.providers && options.providers.length > 0) {
-            Class.$inject = options.providers;
-        }
-        delete options.providers;
-        Class.selector = selector;
-        module(moduleOrName).directive(selector, angular.extend(options, { controller: Class }));
+        var config = {
+            restrict: restrict || 'E',
+            replace: replace !== undefined ? replace : true,
+            transclude: transclude !== undefined ? transclude : true,
+            scope: {},
+            bindToController: bindings || {},
+            template: render,
+            controller: f,
+            controllerAs: 'vm',
+        };
+        module(appName + ".components").directive(camelCaseSelector, function () { return config; });
+        return f;
     };
-}
-exports.Directive = Directive;
+};
+exports.directive = function (_a) {
+    var selector = _a.selector, providers = _a.providers;
+    return function (Class) {
+        var camelCaseSelector = selector ? toCamelCase(selector) : getSelectorFromClassName(Class.name);
+        var bindings = getMetadata(exports.metadataKeys.bindings, Class);
+        if (providers && providers.length > 0) {
+            Class.$inject = providers;
+        }
+        var config = {
+            restrict: 'A',
+            scope: {},
+            bindToController: bindings || {},
+            controller: Class,
+            controllerAs: 'vm',
+        };
+        module(appName + ".components").directive(camelCaseSelector, function () { return config; });
+    };
+};
 function Injectable(options, moduleOrName) {
     if (moduleOrName === void 0) { moduleOrName = appName + ".services"; }
     return function (Class) {
@@ -148,6 +120,17 @@ function Injectable(options, moduleOrName) {
     };
 }
 exports.Injectable = Injectable;
+function injectable(options, moduleOrName) {
+    if (moduleOrName === void 0) { moduleOrName = appName + ".services"; }
+    return function (Class) {
+        var name = options.name || Class.name;
+        if (options.providers && options.providers.length > 0) {
+            Class.$inject = options.providers;
+        }
+        module(moduleOrName).service(name, Class);
+    };
+}
+exports.injectable = injectable;
 function Routes(moduleOrName) {
     if (moduleOrName === void 0) { moduleOrName = appName + ".components"; }
     return function (Class) {
@@ -157,6 +140,15 @@ function Routes(moduleOrName) {
     };
 }
 exports.Routes = Routes;
+function routes(moduleOrName) {
+    if (moduleOrName === void 0) { moduleOrName = appName + ".components"; }
+    return function (Class) {
+        module(moduleOrName).config(['$stateProvider', function ($stateProvider) {
+                return new Class($stateProvider);
+            }]);
+    };
+}
+exports.routes = routes;
 function Pipe(options, moduleOrName) {
     if (moduleOrName === void 0) { moduleOrName = appName + ".pipes"; }
     return function (Pipe) {
@@ -173,6 +165,22 @@ function Pipe(options, moduleOrName) {
     };
 }
 exports.Pipe = Pipe;
+function pipe(options, moduleOrName) {
+    if (moduleOrName === void 0) { moduleOrName = appName + ".pipes"; }
+    return function (Pipe) {
+        if (options.providers && options.providers.length > 0) {
+            Pipe.$inject = options.providers;
+        }
+        var name = options.name || Pipe.name;
+        var filter = function () {
+            var $injector = angular.injector(['ng']);
+            var instance = $injector.instantiate(Pipe);
+            return instance.transform.bind(instance);
+        };
+        module(moduleOrName).filter(name, filter);
+    };
+}
+exports.pipe = pipe;
 function Input(alias) {
     return function (target, key) { return addBindingToMetadata(target, key, '<', alias); };
 }
@@ -181,6 +189,52 @@ function Output(alias) {
     return function (target, key) { return addBindingToMetadata(target, key, '&', alias); };
 }
 exports.Output = Output;
+function input(alias) {
+    return function (target, key) { return addBindingToMetadata(target, key, '<', alias); };
+}
+exports.input = input;
+function output(alias) {
+    return function (target, key) { return addBindingToMetadata(target, key, '&', alias); };
+}
+exports.output = output;
+function reaction(observedProp) {
+    return function (target, key) { return addReactionToMetadata(target, key, observedProp); };
+}
+exports.reaction = reaction;
+function html(strings) {
+    var values = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        values[_i - 1] = arguments[_i];
+    }
+    var str = '';
+    for (var i in strings) {
+        if (strings.hasOwnProperty(i)) {
+            var buildHtml = strings[i];
+            buildHtml = buildHtml.replace(/<(?:(?!<).)*\/>/g, function (match) {
+                return match.replace(/<([\w\d-]*)\s?(.*)?\/>/gi, '<$1 $2></$1>');
+            });
+            buildHtml = buildHtml.replace(/\{{(?:(?!{).)*}}/g, function (matchGlobal) {
+                return matchGlobal.replace(/\{{(.*)}}/, function (match, selection) {
+                    var aux = selection.replace(/@./g, 'vm.');
+                    aux = aux.replace(/#/g, 'vm.css');
+                    return "{{" + aux + "}}";
+                });
+            });
+            buildHtml = buildHtml.replace(/="@.*"/gi, function (match) { return match.replace(/@\./g, 'vm.'); });
+            buildHtml = buildHtml.replace(/@\.([\w\d\.]*)/gi, '{{vm.$1}}');
+            buildHtml = buildHtml.replace(/class="(.*)"/, function (match, selection) {
+                var aux = selection.replace(/#(\.[\w\d\.]*)?/gi, ' {{vm.css$1}}');
+                return "class=\"" + aux + "\"";
+            });
+            str += buildHtml + (values[i] || '');
+        }
+    }
+    return str;
+}
+exports.html = html;
+function getSelectorFromClassName(s) {
+    return s && "" + s[0].toLowerCase() + s.slice(1);
+}
 function toCamelCase(str) {
     return str.toLowerCase()
         .replace(/[-_]+/g, ' ')
@@ -188,32 +242,15 @@ function toCamelCase(str) {
         .replace(/ (.)/g, function ($1) { return $1.toUpperCase(); })
         .replace(/ /g, '');
 }
+function addReactionToMetadata(target, key, observedValue) {
+    var targetConstructor = target.constructor;
+    var reactions = getMetadata(exports.metadataKeys.reactions, targetConstructor) || {};
+    reactions[key] = "vm." + observedValue;
+    defineMetadata(exports.metadataKeys.reactions, reactions, targetConstructor);
+}
 function addBindingToMetadata(target, key, direction, alias) {
     var targetConstructor = target.constructor;
     var bindings = getMetadata(exports.metadataKeys.bindings, targetConstructor) || {};
     bindings[key] = alias || direction;
     defineMetadata(exports.metadataKeys.bindings, bindings, targetConstructor);
 }
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = require("angular");
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-module.exports = require("reflect-metadata");
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(0);
-
-
-/***/ })
-/******/ ]);

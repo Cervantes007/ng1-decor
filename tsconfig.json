@@ -12,14 +12,6 @@
     "declaration": true,
     "outDir": "",
     "removeComments": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "@types/node",
-      "@types/jest",
-      "@types/angular"
-    ]
   },
   "files": [
     "src/index.ts"
